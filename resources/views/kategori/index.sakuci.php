@@ -27,7 +27,7 @@
                 <td>{{ $d->keterangan }}</td>
                 <td>
                     <a href="" class="btn btn-success btn-sm">edit</a>
-                    <a href="" class="btn btn-success btn-sm">hapus</a>
+                    <a href="" class="btn btn-danger btn-sm">hapus</a>
                 </td>
             </tr>
             @endforeach
