@@ -31,4 +31,31 @@ class KategoriController extends Controller
         return redirect(route('kategori.index'))->with('success', 'Kategori berhasil ditambahkan.');
     
     }
+    public function edit(Request $request, $id)
+    {
+    $kategori = kategori::findorfail($id);
+    return view('kategori.edit', compact('kategori'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_kategori'=>'required',
+            'kode_kategori'=>'required',
+            'keterangan'=>'required'
+        ]);
+        $kategori = kategori::findorfail($id);
+        $kategori->update([
+            'nama_kategori'=> $request->nama_kategori,
+            'kode_kategori'=> $request->kode_kategori,
+            'keterangan'=> $request->keterangan,
+        ]);
+        return redirect()->route('kategori.index')->with('success','daftar kategori berhasil di perbarui');
+    }
+    public function destroy($id)
+    {
+        $kategori=kategori::findorfail($id);
+        $kategori->delete();
+        return redirect()->route('kategori.index')->with('success', 'kategori berhasil di hapus');
+    }
 }

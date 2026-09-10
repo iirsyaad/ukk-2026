@@ -25,10 +25,14 @@
                 <td>{{ $d->nama_kategori }}</td>
                 <td> {{ $d->kode_kategori }} </td>
                 <td>{{ $d->keterangan }}</td>
-                <td>
-                    <a href="" class="btn btn-success btn-sm">edit</a>
-                    <a href="" class="btn btn-danger btn-sm">hapus</a>
-                </td>
+                   <td> <a href="{{ route('kategori.edit', ['id'=> $d->id_kategori]) }}" class="btn btn-success btn-sm">edit</a>
+                    <form action="{{ route('kategori.destroy', ['id'=>$d->id_kategori]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger">hapus</button>
+                
+                </form>
+</td>
             </tr>
             @endforeach
         </tbody>
