@@ -9,18 +9,17 @@
         <span class="badge rounded-pill badge-brand px-3 py-2 mb-3">Sakuci v1.0.0</span>
 
         <h1 class="display-5 fw-bold mb-3">
-            Kerangka PHP rasa Laravel,<br class="d-none d-md-inline">
-            <span class="text-brand">tanpa Composer</span>
+         Aplikasi Peminjaman Alat<br class="d-none d-md-inline">
+            <span class="text-brand">by Icud Hodakss.</span>
         </h1>
 
         <p class="lead text-secondary mx-auto mb-4" style="max-width: 620px;">
-            Route, Model, View, dan Controller dalam satu paket ringan.
-            Cukup PHP OOP murni -- salin foldernya, jalankan, selesai.
+           kalian bingung mau pinjam alat olahraga? di Icud hodakss aja, kenapa harus di icud hodakss karena di icud hodakss menyediakan alah olahrga sangat lengkap
         </p>
 
         <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <a class="btn btn-brand btn-lg px-4" href="#langkah">Mulai dari sini</a>
-            <a class="btn btn-outline-brand btn-lg px-4" href="https://github.com/indrabsus/sakuci-framework" target="_blank">GitHub</a>
+            <a class="btn btn-brand btn-lg px-4" href="{{route('login')}}">Login</a>
+            <a class="btn btn-outline-brand btn-lg px-4" href="{{route('alat.index')}}" target="_blank">Alat</a>
         </div>
 
         <p class="text-secondary small mt-3 mb-0">
