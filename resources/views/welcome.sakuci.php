@@ -285,7 +285,7 @@
                 </h1>
 
                 <p class="lead">
-                    Icud Hodakss nyediain alat olahraga lengkap yang bisa kamu pinjam kapan aja —
+                    Icud Hodakss menyediakan alat olahraga lengkap yang bisa kamu pinjam kapan aja —
                     bola, raket, sampai alat fitness. Cek stok, booking, kembalikan, semua tercatat rapi dalam satu sistem.
                 </p>
 

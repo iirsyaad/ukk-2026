@@ -5,55 +5,54 @@ namespace App\Controllers;
 use Sakuci\Controller;
 use Sakuci\Http\Request;
 use App\Models\Alat;
+use App\Models\Kategori;
 
-class AlatController extends Controller
+class alatController extends Controller
 {
-  
-       public function index(Request $request)
+    public function index(Request $request)
     {
-        $data = alat::orderBy('id_alat','desc')->paginate(10);
-    return view('alat.index', compact('data'));
+        $datal = alat::orderBy('id_alat', 'desc')->paginate(4);
+        $kategori = Kategori::all();
+        return view('alat.index', compact('datal', 'kategori'));
     }
 
     public function create(Request $request)
     {
-        return view('alat.create');
+        $kategori = Kategori::all();
+        return view('alat.create', compact('kategori'));
     }
 
     public function store(Request $request)
     {
-       $data = $request->validate([
-            'nama_alat' => 'required|string|max:20',
-            'kode_alat' => 'required|varchar|max:255',
+        $datal = $request->validate([
+            'nama_alat' => 'required|min:3|max:100',
+            'kode_alat' => 'required|varchar|min:3|max:100',
+            'id_kategori' => 'required',
         ]);
-
-       alat::create($data);
-        return redirect(route('alat.index'))->with('success', 'alat berhasil ditambahkan.');
-    
-    }
-    public function edit(Request $request, $id)
-    {
-    $alat = alat::findorfail($id);
-    return view('alat.edit', compact('alat'));
+        alat::create($datal);
+        return redirect(route('alat.index'))->with('success', 'Alat berhasil ditambahkan.');
     }
 
-    public function update(Request $request, $id)
+   public function edit(Request $request, $id_alat)
+{
+    $datal = alat::findOrFail($id_alat);
+    $kategori = Kategori::all();
+    return view('alat.edit', compact('datal', 'kategori'));
+}
+
+    public function update (Request $request, $id_alat)
     {
-        $request->validate([
-            'nama_alat'=>'required',
-            'kode_alat'=>'required',
-        ]);
-        $alat = alat::findorfail($id);
-        $alat->update([
-            'nama_alat'=> $request->nama_alat,
-            'kode_alat'=> $request->kode_alat,
-        ]);
-        return redirect()->route('alat.index')->with('success','daftar alat berhasil di perbarui');
+        $datal = $request->all();
+
+        $alat = alat::FindOrfail($id_alat);
+        $alat->update($datal);
+        return redirect(route('alat.index'))->with('success', 'alat berhasil diubah');
     }
-    public function destroy($id)
+   public function delete(Request $request, $id_alat)
     {
-        $alat=alat::findorfail($id);
+        $alat = alat::findOrFail($id_alat);
         $alat->delete();
-        return redirect()->route('alat.index')->with('success', 'alat berhasil di hapus');
+
+        return redirect()->route('alat.index')->with('success', 'alat berhasil dihapus.');
     }
-    }
+}

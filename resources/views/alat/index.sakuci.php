@@ -1,39 +1,95 @@
-@extends ('layouts.app')
+@extends('layouts.app')
 
-@section ('content')
+@section('title', config('app.name') . ' -- Daftar Alat')
 
-<div class="container">
-    <h1>Alat</h1>
-    <a href="{{ route('alat.create') }}" class="btn btn-primary mb-3 btn-sm">tambah alat</a>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>nama alat</th>
-                <th>kode alat</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-            $no = 1;
-            @endphp
-            @foreach ($data as $d)
-            <tr>
-                <td>{{ $no++ }}</td>
-                <td>{{ $d->nama_alat }}</td>
-                <td> {{ $d->kode_alat }} </td>
-                   <td> <a href="{{ route('alat.edit', ['id'=> $d->id_alat]) }}" class="btn btn-success btn-sm">edit</a>
-                    <form action="{{ route('alat.destroy', ['id'=>$d->id_alat]) }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-sm btn-danger">hapus</button>
-                
-                </form>
-</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+@section('content')
+<div class="container-fluid py-4">
+    
+    <!-- Header Halaman & Tombol Tambah -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <!-- Menggunakan text-body agar otomatis menyesuaikan mode (hitam di terang, putih/terang di gelap) -->
+            <h2 class="fw-bold mb-1">Daftar Alat</h2>
+            <p class="text-muted small mb-0">Kelola data inventaris alat peminjaman dengan mudah.</p>
+        </div>
+        <a href="{{ route('alat.create') }}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Tambah Alat Baru
+        </a>
+    </div>
+
+    <!-- Card Pembungkus Tabel (Menggunakan bg-body dan border standar agar otomatis berubah warna saat dark mode) -->
+    <div class="card border shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <!-- Tambahkan kelas table-striped atau biarkan standar, pastikan tidak memaksa teks jadi hitam pekat -->
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-secondary text-uppercase fs-7">
+                        <tr>
+                            <th class="py-3 px-4" style="width: 5%;">No</th>
+                            <th class="py-3">Nama Alat</th>
+                            <th class="py-3">Kode Alat</th>
+                            <th class="py-3">Kategori</th>
+                            <th class="py-3 text-center" style="width: 15%;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $no = 1; @endphp
+                        @foreach ($datal as $alat)
+                        <tr>
+                            <td class="px-4 text-muted fw-semibold">{{ $no++ }}</td>
+                            <td>
+                                <!-- Menggunakan kelas bawaan teks agar kontras dengan mode gelap -->
+                                <span class="fw-bold">{{ $alat->nama_alat }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary bg-opacity-20 border px-2 py-1 font-monospace">{{ $alat->kode_alat }}</span>
+                            </td>
+                            <td>
+                                @php
+                                    $namaKategori = '-';
+                                    foreach ($kategori as $k) {
+                                        if ($k->id_kategori == $alat->id_kategori) {
+                                            $namaKategori = $k->nama_kategori;
+                                            break;
+                                        }
+                                    }
+                                @endphp
+                                <span class="badge bg-info bg-opacity-10 text-info fw-semibold px-2 py-1">
+                                    {{ $namaKategori }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('alat.edit', ['alat' => $alats->id_alat]) }}" class="btn btn-outline-warning btn-sm px-3">
+                                        Edit
+                                    </a>
+                                    <form action="{{ route('alat.delete', ['id' => $alats->id_alat]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-end" onclick="return confirm('Apakah Anda yakin ingin menghapus alat ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @csrf
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">Belum ada data alat yang ditambahkan.</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Bagian Pagination di Bawah Card -->
+        @if($datal->hasPages())
+        <div class="card-footer py-3 border-top d-flex justify-content-end">
+            {!! $datal->links() !!}
+        </div>
+        @endif
+    </div>
+
 </div>
-
 @endsection
