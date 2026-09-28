@@ -21,7 +21,7 @@
 
                         <div class="mb-3">
                             <label for="nama_alat" class="form-label fw-semibold">Nama Alat</label>
-                            <input type="text" name="nama_alat" id="nama_alat" class="form-control" value="{{ old('nama_alat') }}" placeholder="Contoh: Bor Listrik" required>
+                            <input type="text" name="nama_alat" id="nama_alat" class="form-control" value="{{ old('nama_alat') }}" placeholder="Contoh: Alat Badminton" required>
                         </div>
 
                         <div class="mb-3">
@@ -33,7 +33,7 @@
                             <label for="id_kategori" class="form-label fw-semibold">Kategori</label>
                             <select name="id_kategori" id="id_kategori" class="form-select" required>
                                 <option value="">-- Pilih Kategori --</option>
-                                @foreach ($data as $k)
+                                @foreach ($kategori as $k)
                                     <option value="{{ $k->id_kategori }}" {{ old('id_kategori') == $k->id_kategori ? 'selected' : '' }}>
                                         {{ $k->nama_kategori }}
                                     </option>

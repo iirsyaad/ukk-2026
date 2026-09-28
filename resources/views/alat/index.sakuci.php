@@ -34,7 +34,7 @@
                     </thead>
                     <tbody>
                         @php $no = 1; @endphp
-                        @foreach ($datal as $alat)
+                        @foreach ($data as $alat)
                         <tr>
                             <td class="px-4 text-muted fw-semibold">{{ $no++ }}</td>
                             <td>
@@ -47,7 +47,7 @@
                             <td>
                                 @php
                                     $namaKategori = '-';
-                                    foreach ($kategori as $k) {
+                                    foreach ($data as $k) {
                                         if ($k->id_kategori == $alat->id_kategori) {
                                             $namaKategori = $k->nama_kategori;
                                             break;
@@ -60,10 +60,10 @@
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('alat.edit', ['alat' => $alats->id_alat]) }}" class="btn btn-outline-warning btn-sm px-3">
+                                    <a href="{{ route('alat.edit', ['alat' => $alat->id_alat]) }}" class="btn btn-outline-warning btn-sm px-3">
                                         Edit
                                     </a>
-                                    <form action="{{ route('alat.delete', ['id' => $alats->id_alat]) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('alat.delete', ['id' => $alat->id_alat]) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-end" onclick="return confirm('Apakah Anda yakin ingin menghapus alat ini?')">
@@ -74,9 +74,6 @@
                             </td>
                         </tr>
                         @csrf
-                        <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">Belum ada data alat yang ditambahkan.</td>
-                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -84,9 +81,9 @@
         </div>
         
         <!-- Bagian Pagination di Bawah Card -->
-        @if($datal->hasPages())
+        @if($data->hasPages())
         <div class="card-footer py-3 border-top d-flex justify-content-end">
-            {!! $datal->links() !!}
+            {!! $data->links() !!}
         </div>
         @endif
     </div>
