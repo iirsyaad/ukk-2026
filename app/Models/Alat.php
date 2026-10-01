@@ -14,4 +14,8 @@ class Alat extends Model
         'id_kategori',
         'kode_alat'
     ];
+ public function kategori()
+{
+    return $this->belongsTo(Kategori::class, 'id_kategori', 'id_kategori');
+}
 }

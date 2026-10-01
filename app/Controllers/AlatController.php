@@ -51,8 +51,8 @@ class AlatController extends Controller
         $data = $request->validate([
             'nama_alat' => 'required|string|min:3|max:100',
             'kode_alat' => 'required|string|min:3|max:100',
-            'id_kategori' => 'required',
-        ]);
+            'id_kategori' => 'nullable|exist:kategori,id_kategori',
+                    ]);
 
         $alat = Alat::findOrFail($id_alat);
 

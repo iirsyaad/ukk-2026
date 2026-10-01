@@ -45,18 +45,7 @@
                                 <span class="badge bg-secondary bg-opacity-20 border px-2 py-1 font-monospace">{{ $alat->kode_alat }}</span>
                             </td>
                             <td>
-                                @php
-                                    $namaKategori = '-';
-                                    foreach ($data as $k) {
-                                        if ($k->id_kategori == $alat->id_kategori) {
-                                            $namaKategori = $k->nama_kategori;
-                                            break;
-                                        }
-                                    }
-                                @endphp
-                                <span class="badge bg-info bg-opacity-10 text-info fw-semibold px-2 py-1">
-                                    {{ $namaKategori }}
-                                </span>
+                               {{ $alat->kategori->nama_kategori ?? '-'}}
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
