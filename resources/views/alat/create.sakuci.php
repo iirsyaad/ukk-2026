@@ -21,7 +21,7 @@
 
                         <div class="mb-3">
                             <label for="nama_alat" class="form-label fw-semibold">Nama Alat</label>
-                            <input type="text" name="nama_alat" id="nama_alat" class="form-control" value="{{ old('nama_alat') }}" placeholder="Contoh: Alat Badminton" required>
+                            <input type="text" name="nama_alat" id="nama_alat" class="form-control" value="{{ old('nama_alat') }}" placeholder="Contoh: Bor Listrik" required>
                         </div>
 
                         <div class="mb-3">
