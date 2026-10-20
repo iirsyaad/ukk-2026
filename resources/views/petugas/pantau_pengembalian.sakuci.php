@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pantau Pengembalian - PINVERA')
+@section('title', 'Pantau Pengembalian - sarcud')
 
 @section('content')
 <div class="container-fluid px-4 py-4">
