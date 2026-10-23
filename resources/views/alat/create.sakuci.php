@@ -10,7 +10,7 @@
         <div class="col-md-8">
             <div class="mb-4">
                 <h2 class="fw-bold mb-1">Tambah Alat</h2>
-                <p class="text-muted small mb-0">Tambahkan inventaris alat baru ke dalam sistem.</p>
+                <p class="text-muted small mb-0">Tambahkan. inventaris alat baru ke dalam sistem.</p>
             </div>
 
             <!-- Card Pembungkus Form -->
