@@ -79,7 +79,7 @@
                                     Edit
                                 </a>
 
-                                <form action="{{ route('kategori.destroy', ['id' => $kategori->id_kategori]) }}"
+                                <form action="{{ route('kategori.delete', ['id' => $kategori->id_kategori]) }}"
                                       method="POST"
                                       class="d-inline">
 

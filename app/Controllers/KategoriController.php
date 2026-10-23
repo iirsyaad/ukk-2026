@@ -59,7 +59,7 @@ class KategoriController extends Controller
             ->with('success', 'Daftar kategori berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $kategori = Kategori::findOrFail($id);
 
