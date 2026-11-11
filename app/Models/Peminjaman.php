@@ -19,4 +19,28 @@ class Peminjaman extends Model
         'status',
         'denda'
     ];
+
+    /**
+     * Relasi ke tabel Alat
+     */
+    public function alat()
+    {
+        return $this->belongsTo(Alat::class, 'id_alat', 'id_alat');
+    }
+
+    /**
+     * Relasi ke tabel User
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+
+    /**
+     * Relasi ke tabel Pengembalian
+     */
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'id_peminjaman', 'id_peminjaman');
+    }
 }

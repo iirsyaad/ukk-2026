@@ -14,7 +14,6 @@
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4">
             
-            {{-- Jika tidak ada barang yang sedang dipinjam/disetujui --}}
             @if(empty($peminjamanAktif) || count($peminjamanAktif) === 0)
                 <div class="alert alert-info border-0 shadow-sm rounded-3 d-flex align-items-center gap-3 p-3 mb-0">
                     <i class="bi bi-info-circle-fill fs-4 text-primary"></i>
@@ -23,7 +22,10 @@
                     </div>
                 </div>
             @else
-                {{-- Form Pengembalian --}}
+                <div class="alert alert-warning border-0 shadow-sm mb-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Perhatian:</strong> Denda keterlambatan dan kerusakan akan dihitung secara otomatis oleh sistem (Keterlambatan: Rp 10.000/hari, Kerusakan Ringan: Rp 50.000, Rusak Berat: Rp 100.000).
+                </div>
+
                 <form action="{{ route('peminjam.pengembalian.store') }}" method="POST">
                     @csrf
                     
@@ -50,9 +52,9 @@
                     <div class="mb-3">
                         <label for="kondisi_barang" class="form-label fw-semibold">Kondisi Barang Saat Dikembalikan</label>
                         <select name="kondisi_barang" id="kondisi_barang" class="form-select">
-                            <option value="Baik">Baik (Normal)</option>
-                            <option value="Ringan Rusak">Ada Kerusakan Ringan</option>
-                            <option value="Rusak">Rusak / Tidak Berfungsi</option>
+                            <option value="Baik">Baik (Normal) - Denda Rp 0</option>
+                            <option value="Ringan Rusak">Ada Kerusakan Ringan - Denda Rp 50.000</option>
+                            <option value="Rusak">Rusak / Tidak Berfungsi - Denda Rp 100.000</option>
                         </select>
                     </div>
 

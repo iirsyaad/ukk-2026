@@ -1,90 +1,107 @@
 @extends('layouts.app')
 
-@section('title', 'Pantau Pengembalian - sarcud')
+@section('title', config('app.name') . ' -- Riwayat Pengajuan Peminjaman')
 
 @section('content')
-<div class="container-fluid px-4 py-4">
+<div class="container-fluid py-4 px-4">
     
-    <!-- Header Halaman -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Header Halaman & Tombol Ajukan Baru -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h3 class="fw-bold mb-1">Pantau Pengembalian</h3>
-            <p class="text-body-secondary mb-0">Memantau riwayat alat yang telah dikembalikan oleh siswa.</p>
+            <h3 class="fw-bold mb-1 tracking-tight">Riwayat Peminjaman Alat</h3>
+            <p class="text-body-secondary small mb-0">Daftar pengajuan peminjaman alat yang telah Anda kirimkan.</p>
         </div>
-        <div class="d-flex gap-2 align-items-center">
-            <!-- Tombol Cetak Laporan (Responsif Light/Dark Mode) -->
-            <a href="{{ route('petugas.pengembalian.cetak') }}" target="_blank" class="btn btn-outline-secondary px-3 py-2 rounded-pill fw-medium shadow-sm">
-                <i class="bi bi-printer me-1"></i> Cetak Laporan
-            </a>
-            
-            <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-medium shadow-sm">
-                <i class="bi bi-person-check me-1"></i> Akses Petugas
-            </span>
-        </div>
+        <a href="{{ route('peminjam.createPeminjam') }}" class="btn btn-primary btn-sm px-3 py-2 rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
+            <i class="bi bi-plus-lg"></i>
+            <span class="fw-medium">Ajukan Peminjaman Baru</span>
+        </a>
     </div>
 
-    <!-- Tabel Data Pengembalian -->
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4">
+    <!-- Card Pembungkus Tabel -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead>
+                    <thead class="bg-body-tertiary border-bottom text-body-secondary text-uppercase fs-8 tracking-wider">
                         <tr>
-                            <th class="py-3" width="5%">#</th>
-                            <th class="py-3" width="15%">Tgl Kembali</th>
-                            <th class="py-3" width="20%">Nama Peminjam</th>
-                            <th class="py-3" width="25%">Nama Alat</th>
-                            <th class="py-3" width="15%">Kondisi</th>
-                            <th class="py-3 text-end" width="20%">Status</th>
+                            <th class="py-3 px-4 text-center" style="width: 5%;">No</th>
+                            <th class="py-3 px-3">Nama Alat</th>
+                            <th class="py-3 px-3">Jumlah</th>
+                            <th class="py-3 px-3">Tgl Pinjam</th>
+                            <th class="py-3 px-3">Tgl Kembali</th>
+                            <th class="py-3 px-3">Status</th>
+                            <th class="py-3 px-3">Denda</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($datap as $index => $item)
-                            @php
-                                $peminjaman = $peminjamanList[$item->id_peminjaman] ?? null;
-                                $namaUser = $peminjaman ? ($userList[$peminjaman->id_user] ?? 'Tidak diketahui') : 'Tidak diketahui';
-                                $namaAlat = $peminjaman ? ($alatList[$peminjaman->id_alat] ?? 'Alat dihapus') : 'Alat dihapus';
-                            @endphp
-                            <tr>
-                                <td class="py-3 text-body-secondary">{{ $datap->firstItem() + $index }}</td>
-                                <td class="py-3">{{ date('d M Y', strtotime($item->tanggal_pengembalian)) }}</td>
-                                <td class="py-3 fw-medium text-primary">{{ $namaUser }}</td>
-                                <td class="py-3">
-                                    <i class="bi bi-box-seam text-body-secondary me-2"></i>{{ $namaAlat }}
-                                </td>
-                                <td class="py-3">
-                                    @if(strtolower($item->kondisi_barang) == 'baik')
-                                        <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 rounded-3">Baik</span>
-                                    @elseif(strtolower($item->kondisi_barang) == 'ringan rusak' || strtolower($item->kondisi_barang) == 'rusak ringan')
-                                        <span class="badge bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-3">Rusak Ringan</span>
-                                    @else
-                                        <span class="badge bg-danger bg-opacity-10 text-danger px-2 py-1 rounded-3">{{ $item->kondisi_barang ?? 'Rusak' }}</span>
-                                    @endif
-                                </td>
-                                <td class="py-3 text-end">
-                                    <span class="badge bg-success rounded-pill px-3 py-2">
-                                        <i class="bi bi-check2-all"></i> Selesai
-                                    </span>
-                                </td>
-                            </tr>
+                        @php $no = 1; @endphp
+                        @forelse ($datap as $peminjaman)
+                        @php
+                            // Ambil nama alat dengan aman melalui relasi atau pencarian manual
+                            $alatObj = $peminjaman->alat ?? \App\Models\Alat::find($peminjaman->id_alat ?? null);
+                            $namaAlatFinal = $alatObj->nama_alat ?? $alatObj->nama ?? $alatObj->name ?? ('Alat #' . ($peminjaman->id_alat ?? ''));
+
+                            // Ambil data denda dari tabel pengembalian terkait atau kolom peminjaman
+                            $dataPengembalian = \App\Models\Pengembalian::where('id_peminjaman', $peminjaman->id_peminjaman)->first();
+                            $totalDenda = $peminjaman->denda ?? ($dataPengembalian->denda ?? 0);
+                        @endphp
+                        <tr>
+                            <td class="px-4 text-center text-body-secondary fw-medium fs-7">{{ $no++ }}</td>
+                            <td class="px-3">
+                                <div class="fw-semibold text-body fs-7"> {{ $namaAlatFinal }}</div>
+                            </td>
+                            <td class="px-3">
+                                <span class="badge bg-body-tertiary text-body border font-monospace fw-semibold px-2.5 py-1.5 rounded-2 fs-8">
+                                    {{ $peminjaman->jumlah ?? 1 }} Unit
+                                </span>
+                            </td>
+                            <td class="px-3">
+                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_pinjam ?? '-' }}</span>
+                            </td>
+                            <td class="px-3">
+                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_kembali ?? ($dataPengembalian->tanggal_pengembalian ?? '-') }}</span>
+                            </td>
+                            <td class="px-3">
+                                @if($peminjaman->status == 'Pending')
+                                    <span class="badge bg-warning-subtle text-warning-emphasis fw-semibold px-2.5 py-1.5 rounded-2 fs-8">Pending (Menunggu)</span>
+                                @elseif($peminjaman->status == 'Disetujui')
+                                    <span class="badge bg-info-subtle text-info-emphasis fw-semibold px-2.5 py-1.5 rounded-2 fs-8">Disetujui</span>
+                                @elseif($peminjaman->status == 'Ditolak')
+                                    <span class="badge bg-danger-subtle text-danger-emphasis fw-semibold px-2.5 py-1.5 rounded-2 fs-8">Ditolak</span>
+                                @elseif($peminjaman->status == 'Dipinjam')
+                                    <span class="badge bg-primary-subtle text-primary-emphasis fw-semibold px-2.5 py-1.5 rounded-2 fs-8">Sedang Dipinjam</span>
+                                @else
+                                    <span class="badge bg-success-subtle text-success-emphasis fw-semibold px-2.5 py-1.5 rounded-2 fs-8">Dikembalikan</span>
+                                @endif
+                            </td>
+                            <td class="px-3">
+                                <span class="text-danger fw-semibold fs-7">
+                                    Rp {{ number_format($totalDenda, 0, ',', '.') }}
+                                </span>
+                            </td>
+                        </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-5 text-body-secondary">
-                                    <i class="bi bi-inbox fs-2 d-block mb-3 opacity-25"></i>
-                                    Belum ada data pengembalian alat.
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-body-secondary">
+                                <div class="d-flex flex-column align-items-center gap-2">
+                                    <i class="bi bi-inbox fs-2 opacity-50"></i>
+                                    <span class="fs-7">Belum ada riwayat pengajuan peminjaman alat.</span>
+                                </div>
+                            </td>
+                        </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            
-            @if($datap->hasPages())
-                <div class="d-flex justify-content-end mt-4">
-                    {{ $datap->links() }}
-                </div>
-            @endif
         </div>
+        
+        <!-- Bagian Pagination -->
+        @if(method_exists($datap, 'hasPages') && $datap->hasPages())
+        <div class="card-footer bg-transparent py-3 border-top-0 d-flex justify-content-end">
+            {!! $datap->links() !!}
+        </div>
+        @endif
     </div>
+
 </div>
 @endsection

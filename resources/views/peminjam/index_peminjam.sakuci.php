@@ -11,6 +11,7 @@
             <h3 class="fw-bold mb-1 tracking-tight">Riwayat Peminjaman Alat</h3>
             <p class="text-body-secondary small mb-0">Daftar pengajuan peminjaman alat yang telah Anda kirimkan.</p>
         </div>
+        <!-- PERBAIKAN DI SINI: Gunakan peminjam.createPeminjam -->
         <a href="{{ route('peminjam.createPeminjam') }}" class="btn btn-primary btn-sm px-3 py-2 rounded-3 shadow-sm d-inline-flex align-items-center gap-2">
             <i class="bi bi-plus-lg"></i>
             <span class="fw-medium">Ajukan Peminjaman Baru</span>
@@ -37,9 +38,11 @@
                         @php $no = 1; @endphp
                         @forelse ($datap as $peminjaman)
                         @php
-                            // Ambil nama alat dengan aman (melalui relasi atau cari manual berdasarkan id_alat)
                             $alatObj = $peminjaman->alat ?? \App\Models\Alat::find($peminjaman->id_alat ?? null);
-                            $namaAlatFinal = $alatObj->nama_alat ?? $alatObj->nama ?? $alatObj->name ?? ('Alat #' . ($peminjaman->id_alat ?? ''));
+                            $namaAlatFinal = $alatObj->nama_alat ?? $alatObj->nama ?? ('Alat #' . ($peminjaman->id_alat ?? ''));
+
+                            $dataPengembalian = \App\Models\Pengembalian::where('id_peminjaman', $peminjaman->id_peminjaman)->first();
+                            $totalDenda = $peminjaman->denda ?? ($dataPengembalian->denda ?? 0);
                         @endphp
                         <tr>
                             <td class="px-4 text-center text-body-secondary fw-medium fs-7">{{ $no++ }}</td>
@@ -48,14 +51,14 @@
                             </td>
                             <td class="px-3">
                                 <span class="badge bg-body-tertiary text-body border font-monospace fw-semibold px-2.5 py-1.5 rounded-2 fs-8">
-                                    {{ $peminjaman->jumlah }} Unit
+                                    {{ $peminjaman->jumlah ?? 1 }} Unit
                                 </span>
                             </td>
                             <td class="px-3">
-                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_pinjam }}</span>
+                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_pinjam ?? '-' }}</span>
                             </td>
                             <td class="px-3">
-                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_kembali ?? '-' }}</span>
+                                <span class="text-body-secondary fs-7">{{ $peminjaman->tanggal_kembali ?? ($dataPengembalian->tanggal_pengembalian ?? '-') }}</span>
                             </td>
                             <td class="px-3">
                                 @if($peminjaman->status == 'Pending')
@@ -71,7 +74,9 @@
                                 @endif
                             </td>
                             <td class="px-3">
-                                <span class="text-danger fw-semibold fs-7">Rp {{ number_format($peminjaman->denda ?? 0, 0, ',', '.') }}</span>
+                                <span class="text-danger fw-semibold fs-7">
+                                    Rp {{ number_format($totalDenda, 0, ',', '.') }}
+                                </span>
                             </td>
                         </tr>
                         @empty
